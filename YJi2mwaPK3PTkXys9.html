@@ -1,0 +1,201 @@
+<html><head><base href="." /><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flash Cards de Estudos</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 600px;
+}
+
+.controls {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    min-height: 200px;
+    cursor: pointer;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+}
+
+.card.flipped {
+    transform: rotateY(180deg);
+}
+
+.card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2em;
+    padding: 20px;
+    text-align: center;
+}
+
+.card-back {
+    transform: rotateY(180deg);
+    background: white;
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background: #4CAF50;
+    color: white;
+    cursor: pointer;
+    margin: 5px;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background: #45a049;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.navigation {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.progress {
+    margin-top: 20px;
+    text-align: center;
+    color: #333;
+}
+</style>
+</head>
+<body>
+    <div class="container">
+        <div class="controls">
+            <h2>Adicionar Novo Card</h2>
+            <input type="text" id="questionInput" placeholder="Digite a pergunta">
+            <textarea id="answerInput" placeholder="Digite a resposta"></textarea>
+            <button onclick="addCard()">Adicionar Card</button>
+        </div>
+
+        <div class="card" onclick="flipCard(this)">
+            <div class="card-face card-front">
+                Clique para começar!
+            </div>
+            <div class="card-face card-back">
+                Vamos estudar!
+            </div>
+        </div>
+
+        <div class="navigation">
+            <button onclick="previousCard()">← Anterior</button>
+            <button onclick="nextCard()">Próximo →</button>
+        </div>
+
+        <div class="progress">
+            Card 1 de 1
+        </div>
+    </div>
+
+<script>
+const cards = [
+    { question: 'Clique para começar!', answer: 'Vamos estudar!' }
+];
+
+let currentCardIndex = 0;
+
+function addCard() {
+    const questionInput = document.getElementById('questionInput');
+    const answerInput = document.getElementById('answerInput');
+    
+    if (questionInput.value && answerInput.value) {
+        cards.push({
+            question: questionInput.value,
+            answer: answerInput.value
+        });
+        
+        questionInput.value = '';
+        answerInput.value = '';
+        
+        updateCard();
+        updateProgress();
+    }
+}
+
+function flipCard(cardElement) {
+    cardElement.classList.toggle('flipped');
+}
+
+function updateCard() {
+    const card = document.querySelector('.card');
+    const frontFace = card.querySelector('.card-front');
+    const backFace = card.querySelector('.card-back');
+    
+    card.classList.remove('flipped');
+    frontFace.textContent = cards[currentCardIndex].question;
+    backFace.textContent = cards[currentCardIndex].answer;
+}
+
+function updateProgress() {
+    const progress = document.querySelector('.progress');
+    progress.textContent = `Card ${currentCardIndex + 1} de ${cards.length}`;
+}
+
+function nextCard() {
+    if (currentCardIndex < cards.length - 1) {
+        currentCardIndex++;
+        updateCard();
+        updateProgress();
+    }
+}
+
+function previousCard() {
+    if (currentCardIndex > 0) {
+        currentCardIndex--;
+        updateCard();
+        updateProgress();
+    }
+}
+
+// Exemplo de cards pré-definidos
+cards.push(
+    { question: 'O que é fotossíntese?', answer: 'Processo pelo qual plantas convertem luz solar em energia química' },
+    { question: 'Qual é a capital do Brasil?', answer: 'Brasília' },
+    { question: 'Quem escreveu Dom Casmurro?', answer: 'Machado de Assis' }
+);
+
+updateProgress();
+</script>
+</body></html>
